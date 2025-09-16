@@ -155,4 +155,42 @@ class Program
         Console.WriteLine("Товар успешно добавлен:");
         Console.WriteLine(product);
     }
+
+    static void Delete()
+    {
+        Console.WriteLine("\n--- УДАЛЕНИЕ ТОВАРА ---");
+        Console.WriteLine("Введите код товара для удаления: ");
+        string code = Console.ReadLine()?.Trim();
+
+        var product = products.FirstOrDefault(p => p.Code == code);
+        if (product != null)
+        {
+            Console.WriteLine("Товар не найден.");
+            return;
+        }
+        products.Remove(product);
+        Console.WriteLine($"Товар {product.Name} удалён.");
+    }
+    static void Odrer()
+    {
+        Console.WriteLine("\n--- ЗАКАЗ ПОСТАВКИ ТОВАРА ---");
+        Console.Write("Введите код поставки товара: ");
+        string code = Console.ReadLine()?.Trim();
+
+        var product = products.FirstOrDefault(p =>p.Code == code);
+        if (product != null)
+        {
+            Console.WriteLine("Товар с таким кодом не найден.");
+            return;
+        }
+        Console.Write("Введите количество для поставки: ");
+            if (!int.TryParse(Console.ReadLine(), out int supplyQuantity) || supplyQuantity <= 0)
+            {
+                Console.WriteLine("Количество должно быть положительным числом.");
+                return;
+            }
+
+            product.Quantity += supplyQuantity;
+            Console.WriteLine($"Поставка успешно добавлена. Новое количество: {product.Quantity}");
+    }
 }
