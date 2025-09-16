@@ -115,6 +115,19 @@ class Program
         return "1" + NextCodeNumber++.ToString("D4");
     }
 
+    static void ShowMenu()
+    {
+        Console.WriteLine("=== УЧЁТ ТОВАРОВ В МАГАЗИНЕ ===");
+        Console.WriteLine("1. Добавить товар");
+        Console.WriteLine("2. Удалить товар");
+        Console.WriteLine("3. Заказать поставку товара");
+        Console.WriteLine("4. Продать товар");
+        Console.WriteLine("5. Поиск товаров");
+        Console.WriteLine("6. Показать все товары");
+        Console.WriteLine("0. Выход");
+        Console.Write("Выберите действие: ");
+    }
+
     static void Add()
     {
         Console.WriteLine("\n--- ДОБАВЛЕНИЕ ТОВАРА ---");
@@ -171,7 +184,7 @@ class Program
         products.Remove(product);
         Console.WriteLine($"Товар {product.Name} удалён.");
     }
-    static void Odrer()
+    static void Order()
     {
         Console.WriteLine("\n--- ЗАКАЗ ПОСТАВКИ ТОВАРА ---");
         Console.Write("Введите код поставки товара: ");
@@ -192,5 +205,122 @@ class Program
 
             product.Quantity += supplyQuantity;
             Console.WriteLine($"Поставка успешно добавлена. Новое количество: {product.Quantity}");
+    }
+    static void Sell()
+    {
+        Console.WriteLine("\n--- ПРОДАЖА ТОВАРА ---");
+        Console.Write("Введите код товара: ");
+        string code = Console.ReadLine()?.Trim();
+
+        var product = products.FirstOrDefault(p => p.Code == code);
+        if (product == null)
+        {
+            Console.WriteLine("Товар с таким кодом не найден.");
+            return;
+        }
+
+        if (!product.IsInStock)
+        {
+            Console.WriteLine("Товар отсутствует на складе.");
+            return;
+        }
+
+        Console.Write("Введите количество для продажи: ");
+        if (!int.TryParse(Console.ReadLine(), out int sellQuantity) || sellQuantity <= 0)
+        {
+            Console.WriteLine("Количество должно быть положительным числом.");
+            return;
+        }
+
+        if (sellQuantity > product.Quantity)
+        {
+            Console.WriteLine($"Недостаточно товара на складе. Доступно: {product.Quantity}");
+            return;
+        }
+
+        product.Quantity -= sellQuantity;
+        Console.WriteLine($"Продажа успешно завершена. Остаток: {product.Quantity}");
+    }
+
+    static void Research()
+    {
+        Console.WriteLine("\n--- ПОИСК ТОВАРОВ ---");
+        Console.WriteLine("1. По коду");
+        Console.WriteLine("2. По названию");
+        Console.WriteLine("3. По категории");
+        Console.Write("Выберите способ поиска: ");
+
+        string choice = Console.ReadLine();
+        List<Store> results = new List<Store>();
+
+        switch (choice)
+        {
+            case "1":
+                Console.Write("Введите код товара: ");
+                string code = Console.ReadLine()?.Trim();
+                results = products.Where(p => p.Code == code).ToList();
+                break;
+
+            case "2":
+                Console.Write("Введите название товара (или часть названия): ");
+                string namePart = Console.ReadLine()?.Trim();
+                if (!string.IsNullOrEmpty(namePart))
+                {
+                    results = products.Where(p => p.Name.Contains(namePart, StringComparison.OrdinalIgnoreCase)).ToList();
+                }
+                break;
+
+            case "3":
+                Console.WriteLine("Выберите категорию:");
+                var categories = Enum.GetValues<Category>();
+                for (int i = 0; i < categories.Length; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {categories[i]}");
+                }
+                Console.Write("Введите номер категории: ");
+                if (int.TryParse(Console.ReadLine(), out int catChoice) && catChoice >= 1 && catChoice <= categories.Length)
+                {
+                    Category selectedCategory = categories[catChoice - 1];
+                    results = products.Where(p => p.Category == selectedCategory).ToList();
+                }
+                else
+                {
+                    Console.WriteLine("Неверный выбор категории.");
+                    return;
+                }
+                break;
+
+            default:
+                Console.WriteLine("Неверный выбор способа поиска.");
+                return;
+        }
+
+        if (results.Count == 0)
+        {
+            Console.WriteLine("Товары не найдены.");
+        }
+        else
+        {
+            Console.WriteLine($"\nНайдено товаров: {results.Count}");
+            foreach (var product in results)
+            {
+                Console.WriteLine(product);
+            }
+        }
+    }
+
+    static void Display()
+    {
+        Console.WriteLine("\n--- ВСЕ ТОВАРЫ ---");
+        if (products.Count == 0)
+        {
+            Console.WriteLine("Список товаров пуст.");
+            return;
+        }
+
+        foreach (var product in products)
+        {
+            Console.WriteLine(product);
+        }
     }
 }
