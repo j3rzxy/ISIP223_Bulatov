@@ -107,4 +107,9 @@ class Program
         // Обновляем счётчик кодов
         NextCodeNumber = products.Count + 1;
     }
+
+    static string GenerateCode()
+    {
+        return "1" + NextCodeNumber++.ToString("D4");
+    }
 }
