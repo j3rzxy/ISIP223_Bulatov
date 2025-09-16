@@ -32,28 +32,18 @@ class Store
         Category = category;
     }
 
-    public void Add()
+    public override string ToString()
     {
-
+        return $"Код: {Code}\n" +
+               $"Название: {Name}\n" +
+               $"Цена: {Price:C}\n" +
+               $"Количество: {Quantity}\n" +
+               $"В наличии: {(IsInStock ? "Да" : "Нет")}\n" +
+               $"Категория: {Category}\n" +
+               new string('-', 40);
     }
-
-    public void Delete()
-    {
-
-    }
-
-    public void Order()
-    {
-
-    }
-
-    public void Sell()
-    {
-
-    }
-
-    public void Research()
-    {
-
-    }
+}
+class Program
+{
+    
 }
