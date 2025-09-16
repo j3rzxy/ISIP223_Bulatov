@@ -96,4 +96,15 @@ class Program
             Console.Clear();
         }
     }
+    static void InitializeTestData()
+    {
+        products.Add(new Store(GenerateCode(), "Смартфон", 29999.99m, 10, Category.Electronics));
+        products.Add(new Store(GenerateCode(), "Хлеб", 45.50m, 50, Category.Groceries));
+        products.Add(new Store(GenerateCode(), "Джинсы", 3500.00m, 15, Category.Clothing));
+        products.Add(new Store(GenerateCode(), "Ноутбук", 89999.99m, 5, Category.Electronics));
+        products.Add(new Store(GenerateCode(), "Молоко", 75.00m, 30, Category.Groceries));
+
+        // Обновляем счётчик кодов
+        NextCodeNumber = products.Count + 1;
+    }
 }
