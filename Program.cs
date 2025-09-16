@@ -11,14 +11,14 @@ public enum Category
 }
 class Store
 {
-    public int Code { get; set; }
+    public string Code { get; set; }
     public string Name { get; set; }
     public decimal Price { get; set; }
     public int Quantity { get; set; }
     public bool IsInStock => Quantity > 0;
     public Category Category { get; set; }
 
-    public Store(int code, string name, decimal price, int quantity, Category category)
+    public Store(string code, string name, decimal price, int quantity, Category category)
     {
         Code = code;
         Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -47,6 +47,8 @@ class Program
 {
     private static List<Store> products = new List<Store>();
     private static int NextCodeNumber = 1;
+    private static int quantity;
+
     static void Main(string[] args)
     {
         InitializeTestData();
@@ -61,22 +63,22 @@ class Program
                 switch (choice)
                 {
                     case "1":
-                        AddProduct();
+                        Add();
                         break;
                     case "2":
-                        RemoveProduct();
+                        Delete();
                         break;
                     case "3":
-                        OrderSupply();
+                        Order();
                         break;
                     case "4":
-                        SellProduct();
+                        Sell();
                         break;
                     case "5":
-                        SearchProducts();
+                        Research();
                         break;
                     case "6":
-                        DisplayAllProducts();
+                        Display();
                         break;
                     case "0":
                         Console.WriteLine("Выход из программы. До свидания!");
@@ -111,5 +113,46 @@ class Program
     static string GenerateCode()
     {
         return "1" + NextCodeNumber++.ToString("D4");
+    }
+
+    static void Add()
+    {
+        Console.WriteLine("\n--- ДОБАВЛЕНИЕ ТОВАРА ---");
+
+        Console.WriteLine("Введите навзание товара: ");
+        string name = Console.ReadLine()?.Trim();
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            Console.WriteLine("Название не может быть пустым.");
+            return;
+        }
+        Console.WriteLine("Введите цену товара: ");
+        if (!decimal.TryParse(Console.ReadLine(), out decimal price) || price < 0)
+        {
+            Console.WriteLine("Количество должно быть неотрицательным целым числом.");
+            return;
+        }
+        Console.WriteLine("Выберите категорию:");
+        var categories = Enum.GetValues<Category>();
+        for (int i = 0; i < categories.Length; i++)
+        {
+            Console.WriteLine($"{i + 1}. {categories[i]}");
+        }
+
+        Console.Write("Введите номер категории: ");
+        if (!int.TryParse(Console.ReadLine(), out int catChoice) || catChoice < 1 || catChoice > categories.Length)
+        {
+            Console.WriteLine("Неверный выбор категории.");
+            return;
+        }
+
+        Category selectedCategory = categories[catChoice - 1];
+
+        string code = GenerateCode();
+        var product = new Store(code, name, price, quantity, selectedCategory);
+        products.Add(product);
+
+        Console.WriteLine("Товар успешно добавлен:");
+        Console.WriteLine(product);
     }
 }
