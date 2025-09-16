@@ -45,5 +45,55 @@ class Store
 }
 class Program
 {
-    
+    private static List<Store> products = new List<Store>();
+    private static int NextCodeNumber = 1;
+    static void Main(string[] args)
+    {
+        InitializeTestData();
+
+        while (true)
+        {
+            ShowMenu();
+            string choice = Console.ReadLine();
+
+            try
+            {
+                switch (choice)
+                {
+                    case "1":
+                        AddProduct();
+                        break;
+                    case "2":
+                        RemoveProduct();
+                        break;
+                    case "3":
+                        OrderSupply();
+                        break;
+                    case "4":
+                        SellProduct();
+                        break;
+                    case "5":
+                        SearchProducts();
+                        break;
+                    case "6":
+                        DisplayAllProducts();
+                        break;
+                    case "0":
+                        Console.WriteLine("Выход из программы. До свидания!");
+                        return;
+                    default:
+                        Console.WriteLine("Неверный выбор. Пожалуйста, выберите пункт от 0 до 6.");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+
+            Console.WriteLine("Нажмите любую клавишу для продолжения...");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
 }
