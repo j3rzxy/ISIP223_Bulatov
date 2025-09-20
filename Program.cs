@@ -78,6 +78,28 @@ class TextStatistics
                 sentenceCount++;
             }
         }
+
+        // === Подсчёт гласных и согласных ===
+        // Русские гласные буквы (регистронезависимо)
+        string vowels = "аеёиоуыэюя";
+        int vowelCount = 0;
+        int consonantCount = 0;
+
+        foreach (char c in text)
+        {
+            if (char.IsLetter(c))
+            {
+                char lowerC = char.ToLower(c);
+                if (vowels.Contains(lowerC))
+                {
+                    vowelCount++;
+                }
+                else
+                {
+                    consonantCount++;
+                }
+            }
+        }
     }
     
 class Program
