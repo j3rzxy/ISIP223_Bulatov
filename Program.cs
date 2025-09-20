@@ -100,6 +100,38 @@ class TextStatistics
                 }
             }
         }
+
+        // === Статистика по буквам ===
+        // Создаём словарь для подсчёта частоты каждой буквы
+        Dictionary<char, int> letterFrequency = new Dictionary<char, int>();
+        foreach (char c in text)
+        {
+            if (char.IsLetter(c))
+            {
+                char key = char.ToLower(c);
+                // Если буква уже есть в словаре - увеличиваем счётчик
+                if (letterFrequency.ContainsKey(key))
+                {
+                    letterFrequency[key]++;
+                }
+                // Иначе добавляем новую запись
+                else
+                {
+                    letterFrequency[key] = 1;
+                }
+            }
+        }
+        // Возвращаем заполненный объект статистики
+        return new TextStatistics
+        {
+            WordCount = wordCount,
+            ShortestWord = shortestWord,
+            SentenceCount = sentenceCount,
+            VowelCount = vowelCount,
+            ConsonantCount = consonantCount,
+            LongestWord = longestWord,
+            LetterFrequency = letterFrequency
+        };
     }
     
 class Program
