@@ -42,6 +42,31 @@ class TextStatistics
         {
             words.Add(currentWord.ToString());
         }
+
+        // === Поиск самого короткого и самого длинного слов ===
+        string shortestWord = null;
+        string longestWord = null;
+        int wordCount = words.Count;
+
+        if (wordCount > 0)
+        {
+            shortestWord = words[0];
+            longestWord = words[0];
+
+            foreach (string word in words)
+            {
+                // Поиск самого короткого слова
+                if (word.Length < shortestWord.Length)
+                {
+                    shortestWord = word;
+                }
+                // Поиск самого длинного слова
+                if (word.Length > longestWord.Length)
+                {
+                    longestWord = word;
+                }
+            }
+        }
     }
     
 class Program
