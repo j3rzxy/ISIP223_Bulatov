@@ -13,10 +13,37 @@ class TextStatistics
     public Dictionary<char, int> LetterFrequency { get; set; }
 
     static TextStatistics ProcessText(string text)
-    {
+    {// === Сборка слов из текста ===
+        // Алгоритм: проходим по каждому символу, собираем последовательности букв
+        // Знаки препинания и пробелы используются как разделители
+        List<string> words = new List<string>();
+        StringBuilder currentWord = new StringBuilder();
 
+        foreach (char c in text)
+        {
+            if (char.IsLetter(c))
+            {
+                // Если символ - буква, добавляем к текущему слову
+                currentWord.Append(c);
+            }
+            else
+            {
+                // Если встретился не-буквенный символ и текущее слово не пустое
+                if (currentWord.Length > 0)
+                {
+                    words.Add(currentWord.ToString());
+                    currentWord.Clear();
+                }
+            }
+        }
+
+        // Добавляем последнее слово, если текст закончился буквой
+        if (currentWord.Length > 0)
+        {
+            words.Add(currentWord.ToString());
+        }
     }
-}
+    
 class Program
 {
     static void Main()
