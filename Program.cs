@@ -22,8 +22,17 @@ class Program
 
         while (!exit)
         {
-            Console.WriteLine("\nВведите текст (минимум 100 символов):");
-            string input = Console.ReadLine();
+            Console.WriteLine("\nВведите текст (минимум 100 символов). Для завершения ввода оставьте строку пустой и нажмите Enter:");
+            StringBuilder inputBuilder = new StringBuilder();
+            string line;
+
+            // Собираем строки, пока пользователь не введёт пустую строку
+            while (!string.IsNullOrWhiteSpace(line = Console.ReadLine()))
+            {
+                inputBuilder.AppendLine(line);
+            }
+
+            string input = inputBuilder.ToString();
 
             // Проверка длины текста (минимум 100 символов)
             if (input.Length < 100)
