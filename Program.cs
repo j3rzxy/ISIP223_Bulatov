@@ -67,6 +67,17 @@ class TextStatistics
                 }
             }
         }
+
+        // === Подсчёт предложений ===
+        // Предложения определяются по знакам окончания: . ! ?
+        int sentenceCount = 0;
+        foreach (char c in text)
+        {
+            if (c == '.' || c == '!' || c == '?')
+            {
+                sentenceCount++;
+            }
+        }
     }
     
 class Program
