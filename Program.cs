@@ -133,7 +133,53 @@ class TextStatistics
             LetterFrequency = letterFrequency
         };
     }
-    
+
+    /// <summary>
+    /// Выводит статистику одного текста
+    /// </summary>
+    static void PrintStatistics(TextStatistics stats)
+    {
+        Console.WriteLine($"Количество слов: {stats.WordCount}");
+        Console.WriteLine($"Самое короткое слово: {(stats.ShortestWord ?? "отсутствует")}");
+        Console.WriteLine($"Количество предложений: {stats.SentenceCount}");
+        Console.WriteLine($"Гласных букв: {stats.VowelCount}");
+        Console.WriteLine($"Согласных букв: {stats.ConsonantCount}");
+        Console.WriteLine($"Самое длинное слово: {(stats.LongestWord ?? "отсутствует")}");
+
+        Console.WriteLine("Статистика по буквам:");
+        if (stats.LetterFrequency.Count == 0)
+        {
+            Console.WriteLine("  (буквы не найдены)");
+        }
+        else
+        {
+            foreach (var kvp in stats.LetterFrequency)
+            {
+                Console.WriteLine($"  '{kvp.Key}': {kvp.Value}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Показывает историю обработки всех текстов
+    /// </summary>
+    static void ShowHistory(List<TextStatistics> history)
+    {
+        if (history.Count == 0)
+        {
+            Console.WriteLine("История обработки пуста.");
+            return;
+        }
+
+        Console.WriteLine("\n=== История обработки текстов ===");
+        for (int i = 0; i < history.Count; i++)
+        {
+            Console.WriteLine($"\nТекст #{i + 1} (запись в истории):");
+            PrintStatistics(history[i]);
+        }
+    }
+}
+
 class Program
 {
     static void Main()
