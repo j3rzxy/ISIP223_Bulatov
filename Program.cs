@@ -140,19 +140,21 @@ class Program
         {
             Console.WriteLine("\n--- ДОБАВЛЕНИЕ КНИГИ ---");
 
-            Console.WriteLine("Введите навзание товара: ");
+            Console.WriteLine("Введите название товара: ");
             string title = Console.ReadLine()?.Trim();
             if (string.IsNullOrWhiteSpace(title))
             {
                 Console.WriteLine("Название не может быть пустым.");
                 return;
             }
-            Console.WriteLine("Введите цену книги: ");
-            if (!decimal.TryParse(Console.ReadLine(), out decimal price) || price < 0)
+            Console.WriteLine("Введите автора книги: ");
+            string author = Console.ReadLine()?.Trim();
+            if (string.IsNullOrWhiteSpace(author))
             {
-                Console.WriteLine("Количество должно быть неотрицательным целым числом.");
+                Console.WriteLine("Имя автора не может быть пустым.");
                 return;
             }
+            
             Console.WriteLine("Выберите жанр:");
             var genres = Enum.GetValues<Genre>();
             for (int i = 0; i < genres.Length; i++)
@@ -164,6 +166,12 @@ class Program
             if (!int.TryParse(Console.ReadLine(), out int catChoice) || catChoice < 1 || catChoice > genres.Length)
             {
                 Console.WriteLine("Неверный выбор категории.");
+                return;
+            }
+            Console.WriteLine("Введите цену книги: ");
+            if (!decimal.TryParse(Console.ReadLine(), out decimal price) || price < 0)
+            {
+                Console.WriteLine("Количество должно быть неотрицательным целым числом.");
                 return;
             }
 
