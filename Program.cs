@@ -39,6 +39,11 @@ class Book
         Price = price;
     }
 
+    public Book(string code, string title, decimal price, Genre[] genres, Genre selectedGenre)
+    {
+        Title = title;
+    }
+
     public override string ToString()
     {
         return $"Код: {ID}\n" +
@@ -130,6 +135,46 @@ class Program
             Console.WriteLine("6. Показать самую дорогую и самую дешевую книги");
             Console.WriteLine("0. Выход");
             Console.Write("Выберите действие: ");
+        }
+        static void Add()
+        {
+            Console.WriteLine("\n--- ДОБАВЛЕНИЕ КНИГИ ---");
+
+            Console.WriteLine("Введите навзание товара: ");
+            string title = Console.ReadLine()?.Trim();
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                Console.WriteLine("Название не может быть пустым.");
+                return;
+            }
+            Console.WriteLine("Введите цену книги: ");
+            if (!decimal.TryParse(Console.ReadLine(), out decimal price) || price < 0)
+            {
+                Console.WriteLine("Количество должно быть неотрицательным целым числом.");
+                return;
+            }
+            Console.WriteLine("Выберите жанр:");
+            var genres = Enum.GetValues<Genre>();
+            for (int i = 0; i < genres.Length; i++)
+            {
+                Console.WriteLine($"{i + 1}. {genres[i]}");
+            }
+
+            Console.Write("Введите номер жанра: ");
+            if (!int.TryParse(Console.ReadLine(), out int catChoice) || catChoice < 1 || catChoice > genres.Length)
+            {
+                Console.WriteLine("Неверный выбор категории.");
+                return;
+            }
+
+            Genre selectedGenre = genres[catChoice - 1];
+
+            string code = GenerateCode();
+            var book = new Book(code, title, price, genres, selectedGenre);
+            products.Add(book);
+
+            Console.WriteLine("Товар успешно добавлен:");
+            Console.WriteLine(book);
         }
     }
 }
