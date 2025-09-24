@@ -119,5 +119,17 @@ class Program
         {
             return "1" + NextCodeNumber++.ToString("D4");
         }
+        static void ShowMenu()
+        {
+            Console.WriteLine("=== УЧЁТ КНИГ В БИБЛИОТЕКЕ ===");
+            Console.WriteLine("1. Добавить книгу");
+            Console.WriteLine("2. Удалить книгу");
+            Console.WriteLine("3. Поиск книги");
+            Console.WriteLine("4. Сгруппировать книги по авторам и вывести количество книг каждого автора");
+            Console.WriteLine("5. Отсортировать книги");
+            Console.WriteLine("6. Показать самую дорогую и самую дешевую книги");
+            Console.WriteLine("0. Выход");
+            Console.Write("Выберите действие: ");
+        }
     }
 }
