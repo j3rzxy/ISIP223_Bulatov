@@ -83,13 +83,13 @@ class Program
                         break;
                     case "4":
                         Sort();
-                        break;/*
+                        break;
                     case "5":
-                        CheapEx();
+                        ShowCheapExpensive();
                         break;
                     case "6":
                         Group();
-                        break;*/
+                        break;
                     case "0":
                         Console.WriteLine("Выход из программы. До свидания!");
                         return;
@@ -319,5 +319,31 @@ class Program
                 Console.WriteLine(book);
             }
         }
+        static void ShowCheapExpensive()
+        {
+            if (products.Count == 0)
+            {
+                Console.WriteLine("Список книг пуст.");
+                return;
+            }
+
+            var cheapest = products.OrderBy(b => b.Price).First();
+            var mostExpensive = products.OrderByDescending(b => b.Price).First();
+
+            // Обработка случая, когда все книги одинаковой цены
+            if (cheapest.Price == mostExpensive.Price)
+            {
+                Console.WriteLine("Все книги имеют одинаковую цену:");
+                Console.WriteLine(cheapest);
+                return;
+            }
+
+            Console.WriteLine("\n--- САМАЯ ДЕШЁВАЯ КНИГА ---");
+            Console.WriteLine(cheapest);
+
+            Console.WriteLine("\n--- САМАЯ ДОРОГАЯ КНИГА ---");
+            Console.WriteLine(mostExpensive);
+        }
+
     }
 }
