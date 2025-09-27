@@ -82,7 +82,7 @@ class Program
                         break;
                     case "3":
                         Research();
-                        break;
+                        break;/*
                     case "4":
                         Sort();
                         break;
@@ -91,7 +91,7 @@ class Program
                         break;
                     case "6":
                         Group();
-                        break;
+                        break;*/
                     case "0":
                         Console.WriteLine("Выход из программы. До свидания!");
                         return;
@@ -200,6 +200,71 @@ class Program
             products.Remove(product);
             Console.WriteLine($"Товар {product.Title} удалён.");
         }
+        static void Research()
+        {
+            Console.WriteLine("\n--- ПОИСК КНИГИ ---");
+            Console.WriteLine("1. По коду");
+            Console.WriteLine("2. По названию");
+            Console.WriteLine("3. По жанру");
+            Console.Write("Выберите способ поиска: ");
 
+            string choice = Console.ReadLine();
+            List<Book> results = new List<Book>();
+
+            switch (choice)
+            {
+                case "1":
+                    Console.Write("Введите код товара: ");
+                    string id = Console.ReadLine()?.Trim();
+                    results = products.Where(p => p.ID == id).ToList();
+                    break;
+
+                case "2":
+                    Console.Write("Введите название товара (или часть названия): ");
+                    string titlePart = Console.ReadLine()?.Trim();
+                    if (!string.IsNullOrEmpty(titlePart))
+                    {
+                        results = products.Where(p => p.Title.Contains(titlePart, StringComparison.OrdinalIgnoreCase)).ToList();
+                    }
+                    break;
+
+                case "3":
+                    Console.WriteLine("Выберите категорию:");
+                    var genres = Enum.GetValues<Genre>();
+                    for (int i = 0; i < genres.Length; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {genres[i]}");
+                    }
+                    Console.Write("Введите номер жанра: ");
+                    if (int.TryParse(Console.ReadLine(), out int catChoice) && catChoice >= 1 && catChoice <= genres.Length)
+                    {
+                        Genre selectedCategory = genres[catChoice - 1];
+                        results = products.Where(p => p.Genre == selectedCategory).ToList();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Неверный выбор жанра.");
+                        return;
+                    }
+                    break;
+
+                default:
+                    Console.WriteLine("Неверный выбор способа поиска.");
+                    return;
+            }
+
+            if (results.Count == 0)
+            {
+                Console.WriteLine("Книги не найдены.");
+            }
+            else
+            {
+                Console.WriteLine($"\nНайдено книг: {results.Count}");
+                foreach (var product in results)
+                {
+                    Console.WriteLine(product);
+                }
+            }
+        }
     }
 }
