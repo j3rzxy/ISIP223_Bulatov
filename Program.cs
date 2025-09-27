@@ -21,38 +21,36 @@ class Book
 {
     public string ID { get; set; }
     public string Title { get; set; }
-    public string Author {  get; set; }
+    public string Author { get; set; }
     public Genre Genre { get; set; }
     public int Date { get; set; }
     public int Price { get; set; }
 
+    // Единственный конструктор
     public Book(string id, string title, string author, Genre genre, int date, int price)
     {
-        ID = id;
-        Title = title ?? throw new ArgumentNullException(nameof(title));
+        if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException("ID не может быть пустым.");
         if (string.IsNullOrWhiteSpace(title)) throw new ArgumentException("Название не может быть пустым.");
+        if (string.IsNullOrWhiteSpace(author)) throw new ArgumentException("Автор не может быть пустым.");
         if (price < 0) throw new ArgumentException("Цена не может быть отрицательной.");
+        if (date < 0 || date > DateTime.Now.Year + 1) throw new ArgumentException("Год издания некорректен.");
 
+        ID = id;
         Title = title.Trim();
-        Author = author;
+        Author = author.Trim();
         Genre = genre;
         Date = date;
         Price = price;
-    }
-
-    public Book(string id, string title, decimal price, Genre[] genres, Genre selectedGenre)
-    {
-        Title = title;
     }
 
     public override string ToString()
     {
         return $"Код: {ID}\n" +
                $"Название: {Title}\n" +
-               $"Цена: {Price:C}\n" +
                $"Автор: {Author}\n" +
                $"Жанр: {Genre}\n" +
                $"Год издания: {Date}\n" +
+               $"Цена: {Price} руб.\n" +
                new string('-', 40);
     }
 }
@@ -82,10 +80,10 @@ class Program
                         break;
                     case "3":
                         Research();
-                        break;/*
+                        break;
                     case "4":
                         Sort();
-                        break;
+                        break;/*
                     case "5":
                         CheapEx();
                         break;
@@ -123,7 +121,7 @@ class Program
         }
         static string GenerateCode()
         {
-            return "1" + NextCodeNumber++.ToString("D4");
+            return NextCodeNumber++.ToString();
         }
         static void ShowMenu()
         {
@@ -141,21 +139,22 @@ class Program
         {
             Console.WriteLine("\n--- ДОБАВЛЕНИЕ КНИГИ ---");
 
-            Console.WriteLine("Введите название товара: ");
+            Console.Write("Введите название книги: ");
             string title = Console.ReadLine()?.Trim();
             if (string.IsNullOrWhiteSpace(title))
             {
                 Console.WriteLine("Название не может быть пустым.");
                 return;
             }
-            Console.WriteLine("Введите автора книги: ");
+
+            Console.Write("Введите автора книги: ");
             string author = Console.ReadLine()?.Trim();
             if (string.IsNullOrWhiteSpace(author))
             {
                 Console.WriteLine("Имя автора не может быть пустым.");
                 return;
             }
-            
+
             Console.WriteLine("Выберите жанр:");
             var genres = Enum.GetValues<Genre>();
             for (int i = 0; i < genres.Length; i++)
@@ -166,33 +165,54 @@ class Program
             Console.Write("Введите номер жанра: ");
             if (!int.TryParse(Console.ReadLine(), out int catChoice) || catChoice < 1 || catChoice > genres.Length)
             {
-                Console.WriteLine("Неверный выбор категории.");
+                Console.WriteLine("Неверный выбор жанра.");
                 return;
             }
-            Console.WriteLine("Введите цену книги: ");
-            if (!decimal.TryParse(Console.ReadLine(), out decimal price) || price < 0)
+
+            Console.Write("Введите год издания: ");
+            if (!int.TryParse(Console.ReadLine(), out int year) || year < 0 || year > DateTime.Now.Year + 1)
             {
-                Console.WriteLine("Количество должно быть неотрицательным целым числом.");
+                Console.WriteLine("Год издания должен быть корректным (например, от 1 до 2025).");
+                return;
+            }
+
+            Console.Write("Введите цену книги (в рублях): ");
+            if (!int.TryParse(Console.ReadLine(), out int price) || price < 0)
+            {
+                Console.WriteLine("Цена должна быть неотрицательным целым числом.");
                 return;
             }
 
             Genre selectedGenre = genres[catChoice - 1];
-
             string code = GenerateCode();
-            var book = new Book(code, title, price, genres, selectedGenre);
-            products.Add(book);
 
-            Console.WriteLine("Товар успешно добавлен:");
-            Console.WriteLine(book);
+            try
+            {
+                // ✅ Правильный вызов конструктора с 6 аргументами
+                var book = new Book(code, title, author, selectedGenre, year, price);
+                products.Add(book);
+                Console.WriteLine("\nКнига успешно добавлена:");
+                Console.WriteLine(book);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Ошибка при создании книги: {ex.Message}");
+            }
         }
         static void Delete()
         {
             Console.WriteLine("\n--- УДАЛЕНИЕ КНИГИ ---");
+            Console.WriteLine("Существующие коды:");
+            foreach (var p in products)
+            {
+                Console.WriteLine($" - {p.ID} ({p.Title})");
+            }
             Console.WriteLine("Введите код товара для удаления: ");
+            
             string id = Console.ReadLine()?.Trim();
 
             var product = products.FirstOrDefault(p => p.ID == id);
-            if (product != null)
+            if (product == null)
             {
                 Console.WriteLine("Товар не найден.");
                 return;
@@ -264,6 +284,39 @@ class Program
                 {
                     Console.WriteLine(product);
                 }
+            }
+        }
+        static void Sort()
+        {
+            Console.WriteLine("\n--- СОРТИРОВКА КНИГ ---");
+            Console.WriteLine("1. По названию (А-Я)");
+            Console.WriteLine("2. По году издания (старые → новые)");
+            Console.WriteLine("3. По году издания (новые → старые)");
+            Console.Write("Выберите способ сортировки: ");
+
+            string choice = Console.ReadLine();
+            IEnumerable<Book> sortedBooks = null;
+
+            switch (choice)
+            {
+                case "1":
+                    sortedBooks = products.OrderBy(b => b.Title);
+                    break;
+                case "2":
+                    sortedBooks = products.OrderBy(b => b.Date);
+                    break;
+                case "3":
+                    sortedBooks = products.OrderByDescending(b => b.Date);
+                    break;
+                default:
+                    Console.WriteLine("Неверный выбор.");
+                    return;
+            }
+
+            Console.WriteLine("\nОтсортированный список:");
+            foreach (var book in sortedBooks)
+            {
+                Console.WriteLine(book);
             }
         }
     }
