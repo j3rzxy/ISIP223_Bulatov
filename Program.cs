@@ -88,7 +88,7 @@ class Program
                         ShowCheapExpensive();
                         break;
                     case "6":
-                        Group();
+                        GroupBooksByAuthor();
                         break;
                     case "0":
                         Console.WriteLine("Выход из программы. До свидания!");
@@ -129,9 +129,9 @@ class Program
             Console.WriteLine("1. Добавить книгу");
             Console.WriteLine("2. Удалить книгу");
             Console.WriteLine("3. Поиск книги");
-            Console.WriteLine("4. Сгруппировать книги по авторам и вывести количество книг каждого автора");
-            Console.WriteLine("5. Отсортировать книги");
-            Console.WriteLine("6. Показать самую дорогую и самую дешевую книги");
+            Console.WriteLine("4. Отсортировать книги");
+            Console.WriteLine("5. Показать самую дорогую и самую дешевую книги");
+            Console.WriteLine("6. Сгруппировать книги по авторам и вывести количество книг каждого автора");
             Console.WriteLine("0. Выход");
             Console.Write("Выберите действие: ");
         }
@@ -344,6 +344,28 @@ class Program
             Console.WriteLine("\n--- САМАЯ ДОРОГАЯ КНИГА ---");
             Console.WriteLine(mostExpensive);
         }
+        static void GroupBooksByAuthor()
+        {
+            if (products.Count == 0)
+            {
+                Console.WriteLine("Список книг пуст.");
+                return;
+            }
 
+            var grouped = products
+                .GroupBy(b => b.Author)
+                .Select(g => new { Author = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .ThenBy(x => x.Author);
+
+            Console.WriteLine("\n--- КНИГИ ПО АВТОРАМ ---");
+            Console.WriteLine("Автор | Количество книг");
+            Console.WriteLine(new string('-', 30));
+
+            foreach (var group in grouped)
+            {
+                Console.WriteLine($"{group.Author} | {group.Count}");
+            }
+        }
     }
 }
