@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Linq;
 using static System.Formats.Asn1.AsnWriter;
+using System.Linq;
 
 public enum Genre
 {
@@ -39,7 +40,7 @@ class Book
         Price = price;
     }
 
-    public Book(string code, string title, decimal price, Genre[] genres, Genre selectedGenre)
+    public Book(string id, string title, decimal price, Genre[] genres, Genre selectedGenre)
     {
         Title = title;
     }
@@ -80,16 +81,16 @@ class Program
                         Delete();
                         break;
                     case "3":
-                        Order();
-                        break;
-                    case "4":
-                        Sell();
-                        break;
-                    case "5":
                         Research();
                         break;
+                    case "4":
+                        Sort();
+                        break;
+                    case "5":
+                        CheapEx();
+                        break;
                     case "6":
-                        Display();
+                        Group();
                         break;
                     case "0":
                         Console.WriteLine("Выход из программы. До свидания!");
@@ -184,5 +185,21 @@ class Program
             Console.WriteLine("Товар успешно добавлен:");
             Console.WriteLine(book);
         }
+        static void Delete()
+        {
+            Console.WriteLine("\n--- УДАЛЕНИЕ КНИГИ ---");
+            Console.WriteLine("Введите код товара для удаления: ");
+            string id = Console.ReadLine()?.Trim();
+
+            var product = products.FirstOrDefault(p => p.ID == id);
+            if (product != null)
+            {
+                Console.WriteLine("Товар не найден.");
+                return;
+            }
+            products.Remove(product);
+            Console.WriteLine($"Товар {product.Title} удалён.");
+        }
+
     }
 }
