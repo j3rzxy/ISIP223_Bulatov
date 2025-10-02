@@ -51,3 +51,53 @@ class Student : Person
         CourseNumber = coursenumber;
     }
 }
+class Program
+{
+    static void ShowMenu()
+    {
+        Console.WriteLine("=== СИСТЕМА УПРАВЛЕНИЯ УНИВЕРСИТЕТОМ ===");
+        Console.WriteLine("Выберите с какой сущностью вы хотите работать:");
+        Console.WriteLine("1. Студент");
+        Console.WriteLine("2. Преподаватель");
+        Console.WriteLine("3. Курс");
+        Console.WriteLine("0. Выход");
+    }
+    static void Main(string[] args)
+    {
+        while (true)
+        {
+            ShowMenu();
+            string choice = Console.ReadLine();
+
+            try
+            {
+                switch (choice)
+                {
+                    case "1":
+
+                        break;
+                    case "2":
+
+                        break;
+                    case "3":
+
+                        break;
+                    case "0":
+                        Console.WriteLine("Выход из программы. До свидания!");
+                        return;
+                    default:
+                        Console.WriteLine("Неверный выбор. Пожалуйста, выберите пункт от 0 до 3.");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+
+            Console.WriteLine("Нажмите любую клавишу для продолжения...");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
