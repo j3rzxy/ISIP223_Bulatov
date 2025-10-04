@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using static System.Formats.Asn1.AsnWriter;
 using System.Linq;
 
+//Абстрактный класс для общих характеристик людей
 public abstract class Person
 {
     private string name;
@@ -38,7 +39,8 @@ public abstract class Person
 
     public abstract void DisplayInfo();
 }
-class Teacher : Person
+//Класс преподавателя
+public class Teacher : Person
 {
     private readonly List<Course> courses = new List<Course>();
 
@@ -77,8 +79,8 @@ class Teacher : Person
         }
     }
 }
-
-class Student : Person
+//Класс студента
+public class Student : Person
 {
     private readonly List<Course> courses = new List<Course>();
 
@@ -117,7 +119,8 @@ class Student : Person
         }
     }
 }
-class Course
+//Класс курса
+public class Course
 {
     private readonly string name;
     private Teacher teacher;
@@ -168,6 +171,7 @@ class Course
         }
     }
 }
+//Центральный класс управления системой
 public class University
 {
     private readonly List<Student> students = new List<Student>();
@@ -212,51 +216,78 @@ public class University
 }
 class Program
 {
-    static void ShowMenu()
-    {
-        Console.WriteLine("=== СИСТЕМА УПРАВЛЕНИЯ УНИВЕРСИТЕТОМ ===");
-        Console.WriteLine("Выберите с какой сущностью вы хотите работать:");
-        Console.WriteLine("1. Студент");
-        Console.WriteLine("2. Преподаватель");
-        Console.WriteLine("3. Курс");
-        Console.WriteLine("0. Выход");
-    }
-    static void Main(string[] args)
+    private readonly University university = new University();
+
+    public void Main()
     {
         while (true)
         {
-            ShowMenu();
-            string choice = Console.ReadLine();
+            Console.Clear();
+            Console.WriteLine("===== Система управления университетом =====");
+            Console.WriteLine("1. Добавить студента");
+            Console.WriteLine("2. Добавить преподавателя");
+            Console.WriteLine("3. Создать курс");
+            Console.WriteLine("4. Записать студента на курс");
+            Console.WriteLine("5. Просмотреть курсы студента");
+            Console.WriteLine("6. Просмотреть студентов курса");
+            Console.WriteLine("7. Просмотреть всех студентов");
+            Console.WriteLine("8. Просмотреть всех преподавателей");
+            Console.WriteLine("9. Просмотреть все курсы");
+            Console.WriteLine("0. Выход");
+            Console.Write("Выберите опцию: ");
 
+            if (!int.TryParse(Console.ReadLine(), out int choice))
+            {
+                Console.WriteLine("Некорректный ввод. Нажмите любую клавишу для продолжения...");
+                Console.ReadKey();
+                continue;
+            }
             try
             {
                 switch (choice)
                 {
-                    case "1":
-
+                    case 1:
+                        AddStudent();
                         break;
-                    case "2":
-
+                    case 2:
+                        AddTeacher();
                         break;
-                    case "3":
-
+                    case 3:
+                        CreateCourse();
                         break;
-                    case "0":
-                        Console.WriteLine("Выход из программы. До свидания!");
+                    case 4:
+                        EnrollStudentToCourse();
+                        break;
+                    case 5:
+                        ViewStudentCourses();
+                        break;
+                    case 6:
+                        ViewCourseStudents();
+                        break;
+                    case 7:
+                        ViewAllStudents();
+                        break;
+                    case 8:
+                        ViewAllTeachers();
+                        break;
+                    case 9:
+                        ViewAllCourses();
+                        break;
+                    case 0:
                         return;
                     default:
-                        Console.WriteLine("Неверный выбор. Пожалуйста, выберите пункт от 0 до 3.");
+                        Console.WriteLine("Некорректный выбор. Нажмите любую клавишу для продолжения...");
+                        Console.ReadKey();
                         break;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка: {ex.Message}");
+                Console.WriteLine("Нажмите любую клавишу для продолжения...");
+                Console.ReadKey();
             }
-
-            Console.WriteLine("Нажмите любую клавишу для продолжения...");
-            Console.ReadKey();
-            Console.Clear();
         }
     }
+
 }
