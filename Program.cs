@@ -168,6 +168,48 @@ class Course
         }
     }
 }
+public class University
+{
+    private readonly List<Student> students = new List<Student>();
+    private readonly List<Teacher> teachers = new List<Teacher>();
+    private readonly List<Course> courses = new List<Course>();
+
+    public void AddStudent(Student student)
+    {
+        if (student == null) throw new ArgumentNullException(nameof(student));
+        students.Add(student);
+    }
+    public void AddTeacher(Teacher teacher)
+    {
+        if (teacher == null) throw new ArgumentNullException(nameof(teacher));
+        teachers.Add(teacher);
+    }
+
+    public void AddCourse(Course course)
+    {
+        if (course == null) throw new ArgumentNullException(nameof(course));
+        courses.Add(course);
+    }
+
+    public IEnumerable<Student> GetStudents() => students.AsReadOnly();
+    public IEnumerable<Teacher> GetTeachers() => teachers.AsReadOnly();
+    public IEnumerable<Course> GetCourses() => courses.AsReadOnly();
+
+    public Student FindStudentByName(string name)
+    {
+        return students.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public Teacher FindTeacherByName(string name)
+    {
+        return teachers.FirstOrDefault(t => t.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public Course FindCourseByName(string name)
+    {
+        return courses.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    }
+}
 class Program
 {
     static void ShowMenu()
