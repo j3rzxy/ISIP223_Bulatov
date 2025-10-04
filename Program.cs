@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using System.Xml.Linq;
-using static System.Formats.Asn1.AsnWriter;
 using System.Linq;
 
 //Абстрактный класс для общих характеристик людей
@@ -32,9 +29,16 @@ public abstract class Person
 
     protected Person(string name, int age, string contactInfo)
     {
-        Name = name;
-        Age = age;
-        ContactInfo = contactInfo;
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Имя не может быть пустым");
+        if (age < 0)
+            throw new ArgumentException("Возраст не может быть отрицательным");
+        if (string.IsNullOrWhiteSpace(contactInfo))
+            throw new ArgumentException("Контактная информация не может быть пустой");
+
+        this.name = name;
+        this.age = age;
+        this.contactInfo = contactInfo;
     }
 
     public abstract void DisplayInfo();
@@ -214,7 +218,7 @@ public class University
         return courses.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
     }
 }
-class Program
+class UniversityManagementSystem
 {
     private readonly University university = new University();
 
@@ -233,6 +237,7 @@ class Program
             Console.WriteLine("7. Просмотреть всех студентов");
             Console.WriteLine("8. Просмотреть всех преподавателей");
             Console.WriteLine("9. Просмотреть все курсы");
+            Console.WriteLine("9. Закрпепить курс за преподавателем");
             Console.WriteLine("0. Выход");
             Console.Write("Выберите опцию: ");
 
@@ -273,6 +278,9 @@ class Program
                     case 9:
                         ViewAllCourses();
                         break;
+                        case 10:
+                        AssignTeacherToCourse();
+                        break;
                     case 0:
                         return;
                     default:
@@ -297,7 +305,12 @@ class Program
         Console.Write("Имя: ");
         string name = Console.ReadLine();
         Console.Write("Возраст: ");
-        int age = int.Parse(Console.ReadLine());
+        if (!int.TryParse(Console.ReadLine(), out int age) || age < 0)
+        {
+            Console.WriteLine("Ошибка: возраст должен быть положительным числом");
+            Console.ReadKey();
+            return;
+        }
         Console.Write("Контактная информация: ");
         string contact = Console.ReadLine();
 
@@ -316,7 +329,12 @@ class Program
         Console.Write("Имя: ");
         string name = Console.ReadLine();
         Console.Write("Возраст: ");
-        int age = int.Parse(Console.ReadLine());
+        if (!int.TryParse(Console.ReadLine(), out int age) || age < 0)
+        {
+            Console.WriteLine("Ошибка: возраст должен быть положительным числом");
+            Console.ReadKey();
+            return;
+        }
         Console.Write("Контактная информация: ");
         string contact = Console.ReadLine();
 
@@ -363,15 +381,15 @@ class Program
         }
 
         Console.WriteLine("\nСписок студентов:");
-        foreach (var student in university.GetStudents())
+        foreach (var students in university.GetStudents())
         {
-            Console.WriteLine($"- {student.Name}");
+            Console.WriteLine($"- {students.Name}");
         }
 
         Console.WriteLine("\nСписок курсов:");
-        foreach (var course in university.GetCourses())
+        foreach (var courses in university.GetCourses())
         {
-            Console.WriteLine($"- {course.Name}");
+            Console.WriteLine($"- {courses.Name}");
         }
 
         Console.Write("\nВведите имя студента: ");
@@ -384,11 +402,11 @@ class Program
 
         if (student == null)
         {
-            throw new Exception("Студент не найден");
+            throw new ArgumentException("Студент не найден");
         }
         if (course == null)
         {
-            throw new Exception("Курс не найден");
+            throw new ArgumentException("Курс не найден");
         }
 
         student.EnrollCourse(course);
@@ -410,9 +428,9 @@ class Program
         }
 
         Console.WriteLine("\nСписок студентов:");
-        foreach (var student in university.GetStudents())
+        foreach (var students in university.GetStudents())
         {
-            Console.WriteLine($"- {student.Name}");
+            Console.WriteLine($"- {students.Name}");
         }
 
         Console.Write("\nВведите имя студента: ");
@@ -445,9 +463,9 @@ class Program
         }
 
         Console.WriteLine("\nСписок курсов:");
-        foreach (var course in university.GetCourses())
+        foreach (var courses in university.GetCourses())
         {
-            Console.WriteLine($"- {course.Name}");
+            Console.WriteLine($"- {courses.Name}");
         }
 
         Console.Write("\nВведите название курса: ");
@@ -474,7 +492,7 @@ class Program
 
         if (!university.GetStudents().Any())
         {
-            Console.WriteLine("Студентов нет. Нажмите любую клавишу...");
+            Console.WriteLine("Студентов нет.");
         }
         else
         {
@@ -484,6 +502,7 @@ class Program
                 Console.WriteLine("----------------------");
             }
         }
+        Console.WriteLine("Нажмите любую клавишу для продолжения...");
         Console.ReadKey();
     }
     private void ViewAllTeachers()
@@ -503,6 +522,7 @@ class Program
                 Console.WriteLine("----------------------");
             }
         }
+        Console.WriteLine("Нажмите любую клавишу для продолжения...");
         Console.ReadKey();
     }
 
@@ -523,6 +543,84 @@ class Program
                 Console.WriteLine("----------------------");
             }
         }
+        Console.WriteLine("Нажмите любую клавишу для продолжения...");
         Console.ReadKey();
+    }
+    private void AssignTeacherToCourse()
+    {
+        Console.Clear();
+        Console.WriteLine("===== Назначение преподавателя на курс =====");
+
+        if (!university.GetTeachers().Any())
+        {
+            Console.WriteLine("Нет преподавателей для назначения. Нажмите любую клавишу...");
+            Console.ReadKey();
+            return;
+        }
+
+        if (!university.GetCourses().Any())
+        {
+            Console.WriteLine("Нет курсов для назначения. Нажмите любую клавишу...");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.WriteLine("\nСписок преподавателей:");
+        foreach (var teachers in university.GetTeachers())
+        {
+            Console.WriteLine($"- {teachers.Name}");
+        }
+
+        Console.WriteLine("\nСписок курсов:");
+        foreach (var courses in university.GetCourses())
+        {
+            Console.WriteLine($"- {courses.Name}");
+        }
+
+        Console.Write("\nВведите имя преподавателя: ");
+        string teacherName = Console.ReadLine();
+        Console.Write("Введите название курса: ");
+        string courseName = Console.ReadLine();
+
+        var teacher = university.FindTeacherByName(teacherName);
+        var course = university.FindCourseByName(courseName);
+
+        if (teacher == null)
+        {
+            Console.WriteLine("Преподаватель не найден. Нажмите любую клавишу...");
+            Console.ReadKey();
+            return;
+        }
+        if (course == null)
+        {
+            Console.WriteLine("Курс не найден. Нажмите любую клавишу...");
+            Console.ReadKey();
+            return;
+        }
+
+        // Проверка, не назначен ли уже другой преподаватель
+        if (course.Teacher != null && course.Teacher != teacher)
+        {
+            Console.WriteLine($"Предупреждение: Курс '{course.Name}' уже назначен преподавателю {course.Teacher.Name}.");
+            Console.Write("Вы уверены, что хотите заменить преподавателя? (да/нет): ");
+            string confirm = Console.ReadLine().Trim().ToLower();
+
+            if (confirm != "да" && confirm != "д")
+            {
+                Console.WriteLine("Операция отменена. Нажмите любую клавишу...");
+                Console.ReadKey();
+                return;
+            }
+        }
+
+        teacher.AssignCourse(course);
+        Console.WriteLine("\nПреподаватель успешно назначен на курс!");
+        Console.WriteLine("Нажмите любую клавишу для продолжения...");
+        Console.ReadKey();
+    }
+public static void Main()
+    {
+        var system = new UniversityManagementSystem();
+        system.Run();
     }
 }
