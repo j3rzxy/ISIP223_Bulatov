@@ -5,50 +5,167 @@ using System.Xml.Linq;
 using static System.Formats.Asn1.AsnWriter;
 using System.Linq;
 
-class Person
+public abstract class Person
 {
-    private string Surname {  get; set; }
-    private string Name { get; set; }
-    private int Age { get; set; }
-    private string Contacts { get; set; }
-    public DateOnly Birthday { get; set; }
-    public char Gender { get; set; }
+    private string name;
+    private int age;
+    private string contactInfo;
 
-    public Person(string surname, string name, int age, string contacts, DateOnly birthday, char gender)
+    public string Name
     {
-        Surname = surname;
+        get => name;
+        set => name = !string.IsNullOrWhiteSpace(value) ? value : throw new ArgumentException("Имя не может быть пустым");
+    }
+
+    public int Age
+    {
+        get => age;
+        set => age = value >= 0 ? value : throw new ArgumentException("Возраст не может быть отрицательным");
+    }
+
+    public string ContactInfo
+    {
+        get => contactInfo;
+        set => contactInfo = !string.IsNullOrWhiteSpace(value) ? value : throw new ArgumentException("Контактная информация не может быть пустой");
+    }
+
+    protected Person(string name, int age, string contactInfo)
+    {
         Name = name;
         Age = age;
-        Contacts = contacts;
-        Birthday = birthday;
-        Gender = gender;
+        ContactInfo = contactInfo;
     }
-}
-class Prepodavatel : Person
-{
-    private int Salary { get; set; }
-    private string EducationLevel { get; set; }
 
-    public Prepodavatel(string surname, string name, int age, string contacts, DateOnly birthday, char gender, int salary, string educationlevel)
-        :base(surname, name, age, contacts, birthday, gender)
+    public abstract void DisplayInfo();
+}
+class Teacher : Person
+{
+    private readonly List<Course> courses = new List<Course>();
+
+    public Teacher(string name, int age, string contactInfo)
+        : base(name, age, contactInfo) { }
+
+    public void AssignCourse(Course course)
     {
-        Salary = salary;
-        EducationLevel = educationlevel;
+        if (course == null) throw new ArgumentNullException(nameof(course));
+        if (!courses.Contains(course))
+        {
+            courses.Add(course);
+            course.SetTeacher(this);
+        }
+    }
+
+    public IEnumerable<Course> GetCourses() => courses.AsReadOnly();
+
+    public override void DisplayInfo()
+    {
+        Console.WriteLine($"Преподаватель: {Name}");
+        Console.WriteLine($"Возраст: {Age}");
+        Console.WriteLine($"Контакт: {ContactInfo}");
+
+        if (GetCourses().Any())
+        {
+            Console.WriteLine("Ведет курсы:");
+            foreach (var course in GetCourses())
+            {
+                Console.WriteLine($"- {course.Name}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Не назначен ни на один курс");
+        }
     }
 }
 
 class Student : Person
 {
-    public int StudentNumberID { get; set; }
-    public string HealthGroup { get; private set; }
-    public int CourseNumber { get; private set; }
+    private readonly List<Course> courses = new List<Course>();
 
-    public Student(string surname, string name, int age, string contacts, DateOnly birthday, char gender, int studentnumberid, string healthgroup, int coursenumber)
-        :base(surname, name, age, contacts, birthday, gender)
+    public Student(string name, int age, string contactInfo)
+        : base(name, age, contactInfo) { }
+
+    public void EnrollCourse(Course course)
     {
-        StudentNumberID = studentnumberid;
-        HealthGroup = healthgroup;
-        CourseNumber = coursenumber;
+        if (course == null) throw new ArgumentNullException(nameof(course));
+        if (!courses.Contains(course))
+        {
+            courses.Add(course);
+            course.AddStudent(this);
+        }
+    }
+
+    public IEnumerable<Course> GetCourses() => courses.AsReadOnly();
+
+    public override void DisplayInfo()
+    {
+        Console.WriteLine($"Студент: {Name}");
+        Console.WriteLine($"Возраст: {Age}");
+        Console.WriteLine($"Контакт: {ContactInfo}");
+
+        if (GetCourses().Any())
+        {
+            Console.WriteLine("Записан на курсы:");
+            foreach (var course in GetCourses())
+            {
+                Console.WriteLine($"- {course.Name}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Не записан ни на один курс");
+        }
+    }
+}
+class Course
+{
+    private readonly string name;
+    private Teacher teacher;
+    private readonly List<Student> students = new List<Student>();
+
+    public string Name => name;
+    public Teacher Teacher => teacher;
+    public IEnumerable<Student> Students => students.AsReadOnly();
+
+    public Course(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Название курса не может быть пустым");
+        this.name = name;
+    }
+
+    public void SetTeacher(Teacher teacher)
+    {
+        if (teacher == null) throw new ArgumentNullException(nameof(teacher));
+        this.teacher = teacher;
+    }
+
+    public void AddStudent(Student student)
+    {
+        if (student == null) throw new ArgumentNullException(nameof(student));
+        if (!students.Contains(student))
+        {
+            students.Add(student);
+        }
+    }
+
+    public void DisplayInfo()
+    {
+        Console.WriteLine($"Курс: {Name}");
+        Console.WriteLine($"Преподаватель: {(Teacher != null ? Teacher.Name : "Не назначен")}");
+
+        if (Students.Any())
+        {
+            Console.WriteLine("Студенты:");
+            foreach (var student in Students)
+            {
+                Console.WriteLine($"- {student.Name}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Студентов нет");
+        }
     }
 }
 class Program
