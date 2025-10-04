@@ -218,7 +218,7 @@ class Program
 {
     private readonly University university = new University();
 
-    public void Main()
+    public void Run()
     {
         while (true)
         {
@@ -289,5 +289,240 @@ class Program
             }
         }
     }
+    private void AddStudent()
+    {
+        Console.Clear();
+        Console.WriteLine("===== Добавление студента =====");
 
+        Console.Write("Имя: ");
+        string name = Console.ReadLine();
+        Console.Write("Возраст: ");
+        int age = int.Parse(Console.ReadLine());
+        Console.Write("Контактная информация: ");
+        string contact = Console.ReadLine();
+
+        var student = new Student(name, age, contact);
+        university.AddStudent(student);
+
+        Console.WriteLine("\nСтудент успешно добавлен!");
+        Console.WriteLine("Нажмите любую клавишу для продолжения...");
+        Console.ReadKey();
+    }
+    private void AddTeacher()
+    {
+        Console.Clear();
+        Console.WriteLine("===== Добавление преподавателя =====");
+
+        Console.Write("Имя: ");
+        string name = Console.ReadLine();
+        Console.Write("Возраст: ");
+        int age = int.Parse(Console.ReadLine());
+        Console.Write("Контактная информация: ");
+        string contact = Console.ReadLine();
+
+        var teacher = new Teacher(name, age, contact);
+        university.AddTeacher(teacher);
+
+        Console.WriteLine("\nПреподаватель успешно добавлен!");
+        Console.WriteLine("Нажмите любую клавишу для продолжения...");
+        Console.ReadKey();
+    }
+
+    private void CreateCourse()
+    {
+        Console.Clear();
+        Console.WriteLine("===== Создание курса =====");
+
+        Console.Write("Название курса: ");
+        string name = Console.ReadLine();
+
+        var course = new Course(name);
+        university.AddCourse(course);
+
+        Console.WriteLine("\nКурс успешно создан!");
+        Console.WriteLine("Нажмите любую клавишу для продолжения...");
+        Console.ReadKey();
+    }
+    private void EnrollStudentToCourse()
+    {
+        Console.Clear();
+        Console.WriteLine("===== Запись студента на курс =====");
+
+        if (!university.GetStudents().Any())
+        {
+            Console.WriteLine("Нет студентов для записи. Нажмите любую клавишу...");
+            Console.ReadKey();
+            return;
+        }
+
+        if (!university.GetCourses().Any())
+        {
+            Console.WriteLine("Нет курсов для записи. Нажмите любую клавишу...");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.WriteLine("\nСписок студентов:");
+        foreach (var student in university.GetStudents())
+        {
+            Console.WriteLine($"- {student.Name}");
+        }
+
+        Console.WriteLine("\nСписок курсов:");
+        foreach (var course in university.GetCourses())
+        {
+            Console.WriteLine($"- {course.Name}");
+        }
+
+        Console.Write("\nВведите имя студента: ");
+        string studentName = Console.ReadLine();
+        Console.Write("Введите название курса: ");
+        string courseName = Console.ReadLine();
+
+        var student = university.FindStudentByName(studentName);
+        var course = university.FindCourseByName(courseName);
+
+        if (student == null)
+        {
+            throw new Exception("Студент не найден");
+        }
+        if (course == null)
+        {
+            throw new Exception("Курс не найден");
+        }
+
+        student.EnrollCourse(course);
+        Console.WriteLine("\nСтудент успешно записан на курс!");
+        Console.WriteLine("Нажмите любую клавишу для продолжения...");
+        Console.ReadKey();
+    }
+
+    private void ViewStudentCourses()
+    {
+        Console.Clear();
+        Console.WriteLine("===== Курсы студента =====");
+
+        if (!university.GetStudents().Any())
+        {
+            Console.WriteLine("Нет студентов. Нажмите любую клавишу...");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.WriteLine("\nСписок студентов:");
+        foreach (var student in university.GetStudents())
+        {
+            Console.WriteLine($"- {student.Name}");
+        }
+
+        Console.Write("\nВведите имя студента: ");
+        string name = Console.ReadLine();
+        var student = university.FindStudentByName(name);
+
+        if (student == null)
+        {
+            Console.WriteLine("Студент не найден. Нажмите любую клавишу...");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.Clear();
+        student.DisplayInfo();
+        Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+        Console.ReadKey();
+    }
+
+    private void ViewCourseStudents()
+    {
+        Console.Clear();
+        Console.WriteLine("===== Студенты курса =====");
+
+        if (!university.GetCourses().Any())
+        {
+            Console.WriteLine("Нет курсов. Нажмите любую клавишу...");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.WriteLine("\nСписок курсов:");
+        foreach (var course in university.GetCourses())
+        {
+            Console.WriteLine($"- {course.Name}");
+        }
+
+        Console.Write("\nВведите название курса: ");
+        string name = Console.ReadLine();
+        var course = university.FindCourseByName(name);
+
+        if (course == null)
+        {
+            Console.WriteLine("Курс не найден. Нажмите любую клавишу...");
+            Console.ReadKey();
+            return;
+        }
+
+        Console.Clear();
+        course.DisplayInfo();
+        Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+        Console.ReadKey();
+    }
+
+    private void ViewAllStudents()
+    {
+        Console.Clear();
+        Console.WriteLine("===== Все студенты =====");
+
+        if (!university.GetStudents().Any())
+        {
+            Console.WriteLine("Студентов нет. Нажмите любую клавишу...");
+        }
+        else
+        {
+            foreach (var student in university.GetStudents())
+            {
+                student.DisplayInfo();
+                Console.WriteLine("----------------------");
+            }
+        }
+        Console.ReadKey();
+    }
+    private void ViewAllTeachers()
+    {
+        Console.Clear();
+        Console.WriteLine("===== Все преподаватели =====");
+
+        if (!university.GetTeachers().Any())
+        {
+            Console.WriteLine("Преподавателей нет. Нажмите любую клавишу...");
+        }
+        else
+        {
+            foreach (var teacher in university.GetTeachers())
+            {
+                teacher.DisplayInfo();
+                Console.WriteLine("----------------------");
+            }
+        }
+        Console.ReadKey();
+    }
+
+    private void ViewAllCourses()
+    {
+        Console.Clear();
+        Console.WriteLine("===== Все курсы =====");
+
+        if (!university.GetCourses().Any())
+        {
+            Console.WriteLine("Курсов нет. Нажмите любую клавишу...");
+        }
+        else
+        {
+            foreach (var course in university.GetCourses())
+            {
+                course.DisplayInfo();
+                Console.WriteLine("----------------------");
+            }
+        }
+        Console.ReadKey();
+    }
 }
