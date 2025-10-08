@@ -3,42 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
+
+public class Item
+{
+    public string Name { get; set; }
+    public int Attack {  get; set; }
+    public int Defense {  get; set; }
+}
 //Игрок
 public class Player
 {
-    public int HP { get; set; }
-    public string Equipment { get; set; }
-    public string Weapon { get; set; }
+    public double HP { get; set; } = 100;
+    public double MaxHP { get; set; } = 100;
+    public Item Weapon { get; set; } = new Item { Name = "Железный меч", Attack = 25 };
+    public Item Armor { get; set; } = new Item { Name = "Железные доспехи", Defense = 25 };
+    public bool IsFrozen { get; set; } = false;
 
-    public Player(int hp, string equipment, string weapon)
-    {
-        HP = 100;
-        Equipment = equipment;
-        Weapon = weapon;
-    }
-
-    public void PlayerStep()
-    {
-        Console.WriteLine($"Выберите стратегию хода:");
-        Console.WriteLine("1. Атака");
-        Console.WriteLine("2. Защита");
-        if (!int.TryParse(Console.ReadLine(), out int StepChoice) || StepChoice != 1 || StepChoice != 2)
-        {
-            Console.WriteLine("Ошибка: введите либо 1, либо 2 для выбора стратегии.");
-            Console.ReadKey();
-            return;
-        }
-        if (StepChoice == 1)
-        {
-            Console.WriteLine("-- АТАКА! --");
-
-        }
-        if (StepChoice == 2)
-        {
-            Console.WriteLine("-- ЗАЩИТА! --");
-
-        }
-    }
+    public void Heal() => HP => MaxHP;
+    public int GetTotalAttack() => Weapon?.Attack ?? 0;
+    public int GetTotalDefense() => Armor?.Defense ?? 0;
 }
 public abstract class Enemy
 {
@@ -162,9 +145,20 @@ public class ПестовCMM : Wizard
     }
 }
 //Предметы
+public class HealPotion
+{
+    public HealPotion() { }
+
+    public  void FullHeal()
+    {
+        Player.hp = 100;
+    } 
+}
+//Сундук
 public class Chest
 {
     public string HealPotion { get; set; }
+
 }
 //Основной код игры
 public class Game
