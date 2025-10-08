@@ -19,24 +19,21 @@ public class Player
     public Item Armor { get; set; } = new Item { Name = "Железные доспехи", Defense = 25 };
     public bool IsFrozen { get; set; } = false;
 
-    public void Heal() => HP => MaxHP;
+    public void Heal() => HP = MaxHP;
     public int GetTotalAttack() => Weapon?.Attack ?? 0;
     public int GetTotalDefense() => Armor?.Defense ?? 0;
 }
-public abstract class Enemy
+//Враг
+public class Enemy
 {
-    public double HP { get; set; }
-    public double Attack { get; set; }
-    public double Defense { get; set; }
-
-    public Enemy(double hp, double attack, double defense)
-    {
-        HP = hp;
-        Attack = attack;
-        Defense = defense;
-    }
+    public string Name { get; set; }
+    public int HP { get; set; }
+    public int MaxHP { get; set; }
+    public int Attack { get; set; }
+    public int Defense { get; set; }
+    public string Type { get; set; }
 }
-//Гоблины
+
 public class Goblin : Enemy
 {
     public double CritDamage { get; set; }
