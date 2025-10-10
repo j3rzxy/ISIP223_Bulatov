@@ -116,10 +116,91 @@ public class Game
 
     private void Fight(Enemy enemy)
     {
+        Console.WriteLine("Вы встретили врага!");
+        while (enemy.HP > 0 && player.HP > 0)
+        {
+            if (player.IsFrozen)
+            {
+                Console.WriteLine("Вы заморожены и пропускаете ход!");
+                player.IsFrozen = false;
+            }
+            else
+            {
+                Console.Write("Выберите действие (A - атаковать, D - защищаться): ");
+                var action = Console.ReadKey().KeyChar.ToString().ToLower();
+                Console.WriteLine();
 
+                if (action == "a")
+                {
+                    int damage = player.GetTotalAttack();
+                    enemy.HP -= damage;
+                    Console.WriteLine($"Вы атаковали! Нанесли {damage} урона. У врага осталось {enemy.HP} HP.");
+                }
+                else if (action == "d")
+                {
+                    Console.WriteLine("Вы защищаетесь.");
+                }
+                if (enemy.HP <= 0)
+                {
+                    Console.WriteLine($"Вы победили {enemy.Name}!");
+                    return;
+                }
+
+                // Ход врага
+                int blockChance = rand.Next(100);
+                bool isDodged = false;
+                if (rand.Next(100) < 40) // 40% шанс уклониться
+                {
+                    Console.WriteLine("Вы уклонились от атаки!");
+                    isDodged = true;
+                }
+
+                if (!isDodged)
+                {
+                    int damage = enemy.Attack;
+                    if (enemy.Type == "Skeleton")
+                    {
+                        // Скелет игнорирует защиту
+                    }
+                    else
+                    {
+                        int block = rand.Next(70, 101) * player.GetTotalDefense() / 100;
+                        damage = Math.Max(1, damage - block);
+                    }
+
+                    player.HP -= damage;
+                    Console.WriteLine($"{enemy.Name} атакует! Вы получили {damage} урона.");
+                }
+
+                // Особенности врага
+                if (enemy.Type == "Goblin")
+                {
+                    if (rand.Next(100) < 20) // 20% шанс крита
+                    {
+                        Console.WriteLine("Гоблин наносит критический удар!");
+                        player.HP -= enemy.Attack;
+                        Console.WriteLine($"Вы получили дополнительный урон! Осталось HP: {player.HP}");
+                    }
+                }
+                else if (enemy.Type == "Mage")
+                {
+                    if (rand.Next(100) < 20) // 20% шанс заморозки
+                    {
+                        Console.WriteLine("Маг заморозил вас! Вы пропускаете следующий ход.");
+                        player.IsFrozen = true;
+                    }
+                }
+
+                if (player.HP <= 0)
+                {
+                    Console.WriteLine("Вы погибли...");
+                    return;
+                }
+            }
+        }
     }
 }
-class Program
+    class Program
 {
     static void Main(string[] args)
     {
