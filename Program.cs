@@ -15,7 +15,7 @@ public class Player
 {
     public double HP { get; set; } = 100;
     public double MaxHP { get; set; } = 100;
-    public Item Weapon { get; set; } = new Item { Name = "Железный меч", Attack = 25 };
+    public Item Weapon { get; set; } = new Item { Name = "Железный меч", Attack = 15 };
     public Item Armor { get; set; } = new Item { Name = "Железные доспехи", Defense = 25 };
     public bool IsFrozen { get; set; } = false;
 
@@ -48,22 +48,23 @@ public class Game
 
     public void Start()
     {
+        Console.WriteLine("Добро пожаловать в текстовую RPG!");
         while (player.HP > 0)
         {
             Console.WriteLine();
             if (turn % 10 == 0)
             {
-
+                Fight(GetRandomBoss);
             }
             else
             {
                 if (rand.Next(2) == 0)
                 {
-
+                    Chest();
                 }
                 else
                 {
-
+                    Fight(GetRandomEnemy);
                 }
             }
             turn++;
@@ -76,9 +77,18 @@ public class Game
         Console.WriteLine("Вы проиграли! Игра окончена.");
     }
 
-    private void FindChest()
+    private void Chest()
     {
-
+        Console.WriteLine("Вы получили сундук!");
+        var items = new Item[]
+        {
+            new Item { Name = "Зелье здоровья", Attack = 0, Defense = 0 },
+                new Item { Name = "Острый меч", Attack = 20, Defense = 0 },
+                new Item { Name = "Кольчуга", Attack = 0, Defense = 35 },
+                new Item { Name = "Клинок Дракона", Attack = 35, Defense = 0 },
+                new Item { Name = "Доспехи Легиона", Attack = 0, Defense = 50 }
+        };
+        var item = items[rand.Next(items.Length)];
     }
 
     private Enemy GetRandomEnemy()
@@ -87,7 +97,7 @@ public class Game
         {
                 new Enemy { Name = "Гоблин", Type = "Goblin", HP = 30, MaxHP = 30, Attack = 12, Defense = 3 },
                 new Enemy { Name = "Скелет", Type = "Skeleton", HP = 25, MaxHP = 25, Attack = 10, Defense = 5 },
-                new Enemy { Name = "Маг", Type = "Mage", HP = 20, MaxHP = 20, Attack = 9, Defense = 2 }
+                new Enemy { Name = "Маг", Type = "Wizard", HP = 20, MaxHP = 20, Attack = 9, Defense = 2 }
         };
         return enemies[rand.Next(enemies.Length)];
     }
@@ -98,10 +108,15 @@ public class Game
         {
                 new Boss { Name = "ВВГ", Type = "Goblin", HP = 60, MaxHP = 60, Attack = 18, Defense = 3, CritChanceBonus = 10 },
                 new Boss { Name = "Ковальский", Type = "Skeleton", HP = 62, MaxHP = 62, Attack = 13, Defense = 7 },
-                new Boss { Name = "Архимаг C++", Type = "Mage", HP = 36, MaxHP = 36, Attack = 14, Defense = 2, FreezeChanceBonus = 10 },
+                new Boss { Name = "Архимаг C++", Type = "Wizard", HP = 36, MaxHP = 36, Attack = 14, Defense = 2, FreezeChanceBonus = 10 },
                 new Boss { Name = "Пестов С--", Type = "Skeleton", HP = 32, MaxHP = 32, Attack = 18, Defense = 3, FreezeChanceBonus = 15 }
         };
         return bosses[rand.Next(bosses.Length)];
+    }
+
+    private void Fight(Enemy enemy)
+    {
+
     }
 }
 class Program
