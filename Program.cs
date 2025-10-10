@@ -16,8 +16,8 @@ public class Player
 {
     public double HP { get; set; } = 100;
     public double MaxHP { get; set; } = 100;
-    public Item Weapon { get; set; } = new Item { Name = "Железный меч", Attack = 15 };
-    public Item Armor { get; set; } = new Item { Name = "Железные доспехи", Defense = 25 };
+    public Item Weapon { get; set; } = new Item { Name = "Железный меч", Attack = 10 };
+    public Item Armor { get; set; } = new Item { Name = "Железные доспехи", Defense = 15 };
     public bool IsFrozen { get; set; } = false;
 
     public void Heal() => HP = MaxHP;
@@ -86,9 +86,9 @@ public class Game
         {
             new Item { Name = "Зелье здоровья", Attack = 0, Defense = 0 },
             new Item { Name = "Острый меч", Attack = 15, Defense = 0 },
-            new Item { Name = "Кольчуга", Attack = 0, Defense = 10 },
-            new Item { Name = "Меч Великого", Attack = 20, Defense = 0 },
-            new Item { Name = "Доспехи Легиона", Attack = 0, Defense = 15 }
+            new Item { Name = "Кольчуга", Attack = 0, Defense = 25 },
+            new Item { Name = "Клинок дракона", Attack = 30, Defense = 0 },
+            new Item { Name = "Доспехи Легиона", Attack = 0, Defense = 40 }
         };
 
         var item = items[rand.Next(items.Length)];
