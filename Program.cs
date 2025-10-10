@@ -7,9 +7,10 @@ using System.Runtime.ConstrainedExecution;
 public class Item
 {
     public string Name { get; set; }
-    public int Attack {  get; set; }
-    public int Defense {  get; set; }
+    public int Attack { get; set; }
+    public int Defense { get; set; }
 }
+
 //Игрок
 public class Player
 {
@@ -23,6 +24,7 @@ public class Player
     public int GetTotalAttack() => Weapon?.Attack ?? 0;
     public int GetTotalDefense() => Armor?.Defense ?? 0;
 }
+
 //Враг
 public class Enemy
 {
@@ -54,7 +56,7 @@ public class Game
             Console.WriteLine();
             if (turn % 10 == 0)
             {
-                Fight(GetRandomBoss);
+                Fight(GetRandomBoss());
             }
             else
             {
@@ -64,7 +66,7 @@ public class Game
                 }
                 else
                 {
-                    Fight(GetRandomEnemy);
+                    Fight(GetRandomEnemy());
                 }
             }
             turn++;
@@ -74,30 +76,72 @@ public class Game
             Console.Clear();
         }
 
-        Console.WriteLine("Вы проиграли! Игра окончена.");
+        Console.WriteLine("\nВы проиграли! Игра окончена.");
     }
 
     private void Chest()
     {
-        Console.WriteLine("Вы получили сундук!");
+        Console.WriteLine("\nВы нашли сундук!");
         var items = new Item[]
         {
             new Item { Name = "Зелье здоровья", Attack = 0, Defense = 0 },
-                new Item { Name = "Острый меч", Attack = 20, Defense = 0 },
-                new Item { Name = "Кольчуга", Attack = 0, Defense = 35 },
-                new Item { Name = "Клинок Дракона", Attack = 35, Defense = 0 },
-                new Item { Name = "Доспехи Легиона", Attack = 0, Defense = 50 }
+            new Item { Name = "Острый меч", Attack = 15, Defense = 0 },
+            new Item { Name = "Кольчуга", Attack = 0, Defense = 10 },
+            new Item { Name = "Меч Великого", Attack = 20, Defense = 0 },
+            new Item { Name = "Доспехи Легиона", Attack = 0, Defense = 15 }
         };
+
         var item = items[rand.Next(items.Length)];
+        if (item.Name == "Зелье здоровья")
+        {
+            Console.WriteLine("\nВы нашли зелье! Полностью исцелены.");
+            player.Heal();
+        }
+        else
+        {
+            Console.WriteLine($"Вы нашли: {item.Name}");
+            Console.WriteLine($"Атака: {item.Attack}, Защита: {item.Defense}");
+
+            // Вывод характеристик текущей экипировки
+            if (item.Attack > 0) // Если предмет — оружие
+            {
+                Console.WriteLine($"Текущее оружие: {player.Weapon.Name}");
+                Console.WriteLine($"Атака: {player.Weapon.Attack}, Защита: {player.Weapon.Defense}");
+            }
+            else if (item.Defense > 0) // Если предмет — доспехи
+            {
+                Console.WriteLine($"Текущие доспехи: {player.Armor.Name}");
+                Console.WriteLine($"Атака: {player.Armor.Attack}, Защита: {player.Armor.Defense}");
+            }
+
+            Console.Write("\nВзять предмет? (Y/N): ");
+            if (Console.ReadKey().KeyChar.ToString().ToLower() == "y")
+            {
+                if (item.Attack > 0)
+                {
+                    player.Weapon = item;
+                    Console.WriteLine($"\nВы экипировали {item.Name}.");
+                }
+                else
+                {
+                    player.Armor = item;
+                    Console.WriteLine($"\nВы экипировали {item.Name}.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nПредмет выброшен.");
+            }
+        }
     }
 
     private Enemy GetRandomEnemy()
     {
         var enemies = new Enemy[]
         {
-                new Enemy { Name = "Гоблин", Type = "Goblin", HP = 30, MaxHP = 30, Attack = 12, Defense = 3 },
-                new Enemy { Name = "Скелет", Type = "Skeleton", HP = 25, MaxHP = 25, Attack = 10, Defense = 5 },
-                new Enemy { Name = "Маг", Type = "Wizard", HP = 20, MaxHP = 20, Attack = 9, Defense = 2 }
+            new Enemy { Name = "Гоблин", Type = "Goblin", HP = 30, MaxHP = 30, Attack = 12, Defense = 3 },
+            new Enemy { Name = "Скелет", Type = "Skeleton", HP = 25, MaxHP = 25, Attack = 10, Defense = 5 },
+            new Enemy { Name = "Маг", Type = "Wizard", HP = 20, MaxHP = 20, Attack = 9, Defense = 2 }
         };
         return enemies[rand.Next(enemies.Length)];
     }
@@ -106,17 +150,17 @@ public class Game
     {
         var bosses = new Boss[]
         {
-                new Boss { Name = "ВВГ", Type = "Goblin", HP = 60, MaxHP = 60, Attack = 18, Defense = 3, CritChanceBonus = 10 },
-                new Boss { Name = "Ковальский", Type = "Skeleton", HP = 62, MaxHP = 62, Attack = 13, Defense = 7 },
-                new Boss { Name = "Архимаг C++", Type = "Wizard", HP = 36, MaxHP = 36, Attack = 14, Defense = 2, FreezeChanceBonus = 10 },
-                new Boss { Name = "Пестов С--", Type = "Skeleton", HP = 32, MaxHP = 32, Attack = 18, Defense = 3, FreezeChanceBonus = 15 }
+            new Boss { Name = "ВВГ", Type = "Goblin", HP = 60, MaxHP = 60, Attack = 18, Defense = 3, CritChanceBonus = 10 },
+            new Boss { Name = "Ковальский", Type = "Skeleton", HP = 62, MaxHP = 62, Attack = 13, Defense = 7 },
+            new Boss { Name = "Архимаг C++", Type = "Wizard", HP = 36, MaxHP = 36, Attack = 14, Defense = 2, FreezeChanceBonus = 10 },
+            new Boss { Name = "Пестов С--", Type = "Skeleton", HP = 32, MaxHP = 32, Attack = 18, Defense = 3, FreezeChanceBonus = 15 }
         };
         return bosses[rand.Next(bosses.Length)];
     }
 
     private void Fight(Enemy enemy)
     {
-        Console.WriteLine("Вы встретили врага!");
+        Console.WriteLine($"Вы встретили врага {enemy.Name}!");
         while (enemy.HP > 0 && player.HP > 0)
         {
             if (player.IsFrozen)
@@ -182,7 +226,7 @@ public class Game
                         Console.WriteLine($"Вы получили дополнительный урон! Осталось HP: {player.HP}");
                     }
                 }
-                else if (enemy.Type == "Mage")
+                else if (enemy.Type == "Wizard")
                 {
                     if (rand.Next(100) < 20) // 20% шанс заморозки
                     {
@@ -200,7 +244,8 @@ public class Game
         }
     }
 }
-    class Program
+
+class Program
 {
     static void Main(string[] args)
     {
