@@ -150,10 +150,10 @@ public class Game
     {
         var bosses = new Boss[]
         {
-            new Boss { Name = "ВВГ", Type = "Goblin", HP = 60, MaxHP = 60, Attack = 18, Defense = 3, CritChanceBonus = 10 },
-            new Boss { Name = "Ковальский", Type = "Skeleton", HP = 62, MaxHP = 62, Attack = 13, Defense = 7 },
-            new Boss { Name = "Архимаг C++", Type = "Wizard", HP = 36, MaxHP = 36, Attack = 14, Defense = 2, FreezeChanceBonus = 10 },
-            new Boss { Name = "Пестов С--", Type = "Skeleton", HP = 32, MaxHP = 32, Attack = 18, Defense = 3, FreezeChanceBonus = 15 }
+            new Boss { Name = "БОСС ВВГ", Type = "Goblin", HP = 60, MaxHP = 60, Attack = 18, Defense = 3, CritChanceBonus = 10 },
+            new Boss { Name = "БОСС Ковальский", Type = "Skeleton", HP = 62, MaxHP = 62, Attack = 13, Defense = 7 },
+            new Boss { Name = "БОСС Архимаг C++", Type = "Wizard", HP = 36, MaxHP = 36, Attack = 14, Defense = 2, FreezeChanceBonus = 10 },
+            new Boss { Name = "БОСС Пестов С--", Type = "Skeleton", HP = 32, MaxHP = 32, Attack = 18, Defense = 3, FreezeChanceBonus = 15 }
         };
         return bosses[rand.Next(bosses.Length)];
     }
