@@ -1,6 +1,6 @@
 ﻿namespace ISIP223_Bulatov.Models
 {
-    internal interface IEnenmyFactory
+    internal interface IEnemyFactory
     {
         Enemy CreateRandomEnemy();
     }

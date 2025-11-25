@@ -1,6 +1,6 @@
 ﻿namespace ISIP223_Bulatov.Models
 {
-    internal class EnemyFactory : IEnenmyFactory
+    internal class EnemyFactory : IEnemyFactory
     {
         private readonly Random _random = new Random();
         private readonly Enemy[] _enemies = new Enemy[]
