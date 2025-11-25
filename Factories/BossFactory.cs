@@ -1,4 +1,4 @@
-﻿namespace ISIP223_Bulatov.Models
+﻿namespace ISIP223_Bulatov.Factories
 {
     internal class BossFactory : IEnemyFactory
     {
@@ -10,6 +10,6 @@
             new Boss { Name = "Архимаг C++", Type = "Wizard", HP = 36, MaxHP = 36, Attack = 14, Defense = 2, FreezeChanceBonus = 10 },
             new Boss { Name = "Пестов С--", Type = "Skeleton", HP = 32, MaxHP = 32, Attack = 18, Defense = 3, FreezeChanceBonus = 15 }
         };
-        public Enemy CreateRandomEnenmy() => _bosses[_random.Next(_bosses.Length)];
+        public Enemy CreateRandomEnemy() => _bosses[_random.Next(_bosses.Length)];
     }
 }

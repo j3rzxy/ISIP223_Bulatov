@@ -1,12 +1,12 @@
-﻿using ISIP223_Bulatov.Models;
+﻿using ISIP223_Bulatov;
+using ISIP223_Bulatov.Factories;
 
-namespace TextRPG // Рекомендуется вынести в отдельное пространство имён
+namespace TextRPG
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8; // Для корректного отображения русских символов
             var game = new Game();
             game.Start();
         }

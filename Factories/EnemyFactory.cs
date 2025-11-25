@@ -1,4 +1,4 @@
-﻿namespace ISIP223_Bulatov.Models
+﻿namespace ISIP223_Bulatov.Factories
 {
     internal class EnemyFactory : IEnemyFactory
     {
@@ -9,6 +9,6 @@
             new Enemy { Name = "Скелет", Type = "Skeleton", HP = 25, MaxHP = 25, Attack = 10, Defense = 5 },
             new Enemy { Name = "Маг", Type = "Wizard", HP = 20, MaxHP = 20, Attack = 9, Defense = 2 }
         };
-        public Enemy CreateRandomEnenmy() => _enemies[_random.Next(_enemies.Length)];
+        public Enemy CreateRandomEnemy() => _enemies[_random.Next(_enemies.Length)];
     }
 }

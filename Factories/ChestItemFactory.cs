@@ -1,4 +1,4 @@
-﻿namespace ISIP223_Bulatov.Models
+﻿namespace ISIP223_Bulatov.Factories
 {
     internal class ChestItemFactory : IItemFactory
     {
