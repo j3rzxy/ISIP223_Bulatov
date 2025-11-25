@@ -92,6 +92,10 @@ namespace ISIP223_Bulatov
         }
         private void Fight(Enemy enemy)
         {
+            if (enemy.HP <= 0)
+            {
+                enemy.HP = enemy.MaxHP; // Автоисправление
+            }
             Console.WriteLine($"Вы встретили врага {enemy.Name}!");
             while (enemy.HP > 0 && player.HP > 0)
             {
@@ -108,9 +112,19 @@ namespace ISIP223_Bulatov
 
                     if (action == "a")
                     {
-                        int damage = player.GetTotalAttack();
-                        enemy.HP -= damage;
-                        Console.WriteLine($"Вы атаковали! Нанесли {damage} урона. У врага осталось {enemy.HP} HP.");
+                        if (enemy.Type == "Slug")
+                        {
+                            int damage = player.GetTotalAttack();
+                            damage -= 2;
+                            enemy.HP -= damage;
+                            Console.WriteLine($"Вы атаковали! Нанесли {damage} урона. У врага осталось {enemy.HP} HP.");
+                        }
+                        else
+                        {
+                            int damage = player.GetTotalAttack();
+                            enemy.HP -= damage;
+                            Console.WriteLine($"Вы атаковали! Нанесли {damage} урона. У врага осталось {enemy.HP} HP.");
+                        }
                     }
                     else if (action == "d")
                     {
