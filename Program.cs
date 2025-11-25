@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
-
-public class Item
+﻿public class Item
 {
     public string Name { get; set; }
     public int Attack { get; set; }
@@ -84,11 +78,11 @@ public class Game
         Console.WriteLine("\nВы нашли сундук!");
         var items = new Item[]
         {
-            new Item { Name = "Зелье здоровья", Attack = 0, Defense = 0 },
-            new Item { Name = "Острый меч", Attack = 15, Defense = 0 },
-            new Item { Name = "Кольчуга", Attack = 0, Defense = 25 },
-            new Item { Name = "Клинок дракона", Attack = 30, Defense = 0 },
-            new Item { Name = "Доспехи Легиона", Attack = 0, Defense = 40 }
+            new() { Name = "Зелье здоровья", Attack = 0, Defense = 0 },
+            new() { Name = "Острый меч", Attack = 15, Defense = 0 },
+            new() { Name = "Кольчуга", Attack = 0, Defense = 25 },
+            new() { Name = "Клинок дракона", Attack = 30, Defense = 0 },
+            new() { Name = "Доспехи Легиона", Attack = 0, Defense = 40 }
         };
 
         var item = items[rand.Next(items.Length)];
